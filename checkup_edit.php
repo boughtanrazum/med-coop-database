@@ -61,9 +61,15 @@ if ($id > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Редактирование осмотра - Медицинский Кооператив</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=<?php echo time(); ?>">
+    <script src="script.js?v=<?php echo time(); ?>" defer></script>
 </head>
 <body>
+    <div class="floating-bg">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
     <div class="container">
         <header class="header">
             <h1>Редактирование осмотра</h1>
@@ -78,81 +84,76 @@ if ($id > 0) {
 
         <section class="content-section">
             <?php if ($message): ?>
-                <div style="background: <?php echo strpos($message, 'Ошибка') !== false ? '#f8d7da' : '#d4edda'; ?>; 
-                            color: <?php echo strpos($message, 'Ошибка') !== false ? '#721c24' : '#155724'; ?>; 
-                            padding: 15px; border-radius: 5px; margin-bottom: 20px; 
-                            border-left: 4px solid <?php echo strpos($message, 'Ошибка') !== false ? '#dc3545' : '#28a745'; ?>;">
+                <div class="<?php echo strpos($message, 'Ошибка') !== false ? 'error-message' : 'success-message'; ?>">
                     <?php echo $message; ?>
                 </div>
             <?php endif; ?>
 
             <?php if ($checkup): ?>
                 <h2>Редактирование данных осмотра</h2>
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
-                    <form method="POST" action="checkup_edit.php">
-                        <input type="hidden" name="id" value="<?php echo $checkup['IND']; ?>">
-                        
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Пациент:</label>
-                            <select name="patient" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                                <option value="">Выберите пациента</option>
-                                <?php
-                                $result = $conn->query("SELECT * FROM Patient ORDER BY Surname, Name");
-                                while($row = $result->fetch_assoc()) {
-                                    $selected = ($row['IND'] == $checkup['Patient']) ? 'selected' : '';
-                                    echo "<option value='{$row['IND']}' $selected>{$row['Surname']} {$row['Name']} {$row['Patronymic']}</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Врач:</label>
-                            <select name="doctor" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                                <option value="">Выберите врача</option>
-                                <?php
-                                $result = $conn->query("SELECT * FROM Doctor ORDER BY Surname, Name");
-                                while($row = $result->fetch_assoc()) {
-                                    $selected = ($row['IND'] == $checkup['Doctor']) ? 'selected' : '';
-                                    echo "<option value='{$row['IND']}' $selected>{$row['Surname']} {$row['Name']} {$row['Patronymic']}</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Место осмотра:</label>
-                            <select name="cabinet" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                                <option value="1" <?php echo $checkup['Cabinet'] == 1 ? 'selected' : ''; ?>>На дому</option>
-                                <option value="2" <?php echo $checkup['Cabinet'] == 2 ? 'selected' : ''; ?>>Кабинет</option>
-                            </select>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Диагноз:</label>
-                            <select name="diagnosis" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                                <option value="">Выберите диагноз</option>
-                                <?php
-                                $result = $conn->query("SELECT * FROM Diagnosis ORDER BY Naming");
-                                while($row = $result->fetch_assoc()) {
-                                    $selected = ($row['IND'] == $checkup['Diagnosis']) ? 'selected' : '';
-                                    echo "<option value='{$row['IND']}' $selected>{$row['Naming']}</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Дата осмотра:</label>
-                            <input type="date" name="date" value="<?php echo $checkup['Date']; ?>" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        
-                        <button type="submit" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Сохранить изменения</button>
-                        <a href="checkup_manage.php" style="background: #6c757d; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; display: inline-block; margin-left: 10px;">Отмена</a>
-                    </form>
-                </div>
+                <form method="POST" action="checkup_edit.php">
+                    <input type="hidden" name="id" value="<?php echo $checkup['IND']; ?>">
+                    
+                    <div class="form-group">
+                        <label>Пациент:</label>
+                        <select name="patient" required>
+                            <option value="">Выберите пациента</option>
+                            <?php
+                            $result = $conn->query("SELECT * FROM Patient ORDER BY Surname, Name");
+                            while($row = $result->fetch_assoc()) {
+                                $selected = ($row['IND'] == $checkup['Patient']) ? 'selected' : '';
+                                echo "<option value='{$row['IND']}' $selected>{$row['Surname']} {$row['Name']} {$row['Patronymic']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Врач:</label>
+                        <select name="doctor" required>
+                            <option value="">Выберите врача</option>
+                            <?php
+                            $result = $conn->query("SELECT * FROM Doctor ORDER BY Surname, Name");
+                            while($row = $result->fetch_assoc()) {
+                                $selected = ($row['IND'] == $checkup['Doctor']) ? 'selected' : '';
+                                echo "<option value='{$row['IND']}' $selected>{$row['Surname']} {$row['Name']} {$row['Patronymic']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Место осмотра:</label>
+                        <select name="cabinet" required>
+                            <option value="1" <?php echo $checkup['Cabinet'] == 1 ? 'selected' : ''; ?>>На дому</option>
+                            <option value="2" <?php echo $checkup['Cabinet'] == 2 ? 'selected' : ''; ?>>Кабинет</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Диагноз:</label>
+                        <select name="diagnosis" required>
+                            <option value="">Выберите диагноз</option>
+                            <?php
+                            $result = $conn->query("SELECT * FROM Diagnosis ORDER BY Naming");
+                            while($row = $result->fetch_assoc()) {
+                                $selected = ($row['IND'] == $checkup['Diagnosis']) ? 'selected' : '';
+                                echo "<option value='{$row['IND']}' $selected>{$row['Naming']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Дата осмотра:</label>
+                        <input type="date" name="date" value="<?php echo $checkup['Date']; ?>" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">Сохранить изменения</button>
+                        <a href="checkup_manage.php" class="btn-cancel-form">Отмена</a>
+                    </div>
+                </form>
             <?php else: ?>
-                <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; border-left: 4px solid #dc3545;">
-                    Осмотр не найден!
-                </div>
+                <div class="error-message">Осмотр не найден!</div>
                 <div style="text-align: center; margin-top: 20px;">
-                    <a href="checkup_manage.php" style="background: #007bff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">Вернуться к управлению осмотрами</a>
+                    <a href="checkup_manage.php" class="btn-add">Вернуться к управлению осмотрами</a>
                 </div>
             <?php endif; ?>
         </section>

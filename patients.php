@@ -16,8 +16,15 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Пациенты - Медицинский Кооператив</title>
     <link rel="stylesheet" href="style.css?v=<?php echo time(); ?>">
+    <script src="script.js?v=<?php echo time(); ?>" defer></script>
 </head>
 <body>
+    <div class="floating-bg">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
+
     <div class="container">
         <header class="header">
             <h1>Медицинский Кооператив</h1>
@@ -92,7 +99,7 @@ try {
         <?php endif; ?>
 
         <footer class="footer">
-            <p>© 2025-2026, Разуменко Б.В.</p>
+            <p>© boughtanrazum, 2025-2026</p>
         </footer>
     </div>
 </body>

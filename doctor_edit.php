@@ -66,9 +66,15 @@ if ($id > 0) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Редактирование врача - Медицинский Кооператив</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=<?php echo time(); ?>">
+    <script src="script.js?v=<?php echo time(); ?>" defer></script>
 </head>
 <body>
+    <div class="floating-bg">
+        <div class="orb"></div>
+        <div class="orb"></div>
+        <div class="orb"></div>
+    </div>
     <div class="container">
         <header class="header">
             <h1>Редактирование врача</h1>
@@ -83,62 +89,57 @@ if ($id > 0) {
 
         <section class="content-section">
             <?php if ($message): ?>
-                <div style="background: <?php echo strpos($message, 'Ошибка') !== false ? '#f8d7da' : '#d4edda'; ?>; 
-                            color: <?php echo strpos($message, 'Ошибка') !== false ? '#721c24' : '#155724'; ?>; 
-                            padding: 15px; border-radius: 5px; margin-bottom: 20px; 
-                            border-left: 4px solid <?php echo strpos($message, 'Ошибка') !== false ? '#dc3545' : '#28a745'; ?>;">
+                <div class="<?php echo strpos($message, 'Ошибка') !== false ? 'error-message' : 'success-message'; ?>">
                     <?php echo $message; ?>
                 </div>
             <?php endif; ?>
 
             <?php if ($doctor): ?>
                 <h2>Редактирование данных врача</h2>
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
-                    <form method="POST" action="doctor_edit.php">
-                        <input type="hidden" name="id" value="<?php echo $doctor['IND']; ?>">
-                        
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Фамилия:</label>
-                            <input type="text" name="surname" value="<?php echo $doctor['Surname']; ?>" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Имя:</label>
-                            <input type="text" name="name" value="<?php echo $doctor['Name']; ?>" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Отчество:</label>
-                            <input type="text" name="patronymic" value="<?php echo $doctor['Patronymic']; ?>" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                        </div>
-                        <div style="margin-bottom: 15px;">
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Категория:</label>
-                            <select name="category" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
-                                <option value="">Без категории</option>
-                                <?php
-                                $result = $conn->query("SELECT * FROM Category");
-                                while($row = $result->fetch_assoc()) {
-                                    $selected = ($row['IND'] == $doctor['Category']) ? 'selected' : '';
-                                    echo "<option value='{$row['IND']}' $selected>{$row['Naiming']}</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        
-                        <button type="submit" style="background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Сохранить изменения</button>
-                        <a href="doctor_manage.php" style="background: #6c757d; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; display: inline-block; margin-left: 10px;">Отмена</a>
-                    </form>
-                </div>
+                <form method="POST" action="doctor_edit.php">
+                    <input type="hidden" name="id" value="<?php echo $doctor['IND']; ?>">
+                    
+                    <div class="form-group">
+                        <label>Фамилия:</label>
+                        <input type="text" name="surname" value="<?php echo $doctor['Surname']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Имя:</label>
+                        <input type="text" name="name" value="<?php echo $doctor['Name']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Отчество:</label>
+                        <input type="text" name="patronymic" value="<?php echo $doctor['Patronymic']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Категория:</label>
+                        <select name="category">
+                            <option value="">Без категории</option>
+                            <?php
+                            $result = $conn->query("SELECT * FROM Category");
+                            while($row = $result->fetch_assoc()) {
+                                $selected = ($row['IND'] == $doctor['Category']) ? 'selected' : '';
+                                echo "<option value='{$row['IND']}' $selected>{$row['Naiming']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">Сохранить изменения</button>
+                        <a href="doctor_manage.php" class="btn-cancel-form">Отмена</a>
+                    </div>
+                </form>
             <?php else: ?>
-                <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; border-left: 4px solid #dc3545;">
-                    Врач не найден!
-                </div>
+                <div class="error-message">Врач не найден!</div>
                 <div style="text-align: center; margin-top: 20px;">
-                    <a href="doctor_manage.php" style="background: #007bff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">Вернуться к управлению врачами</a>
+                    <a href="doctor_manage.php" class="btn-add">Вернуться к управлению врачами</a>
                 </div>
             <?php endif; ?>
         </section>
 
         <footer class="footer">
-            <p>© 2025-2026, Разуменко Б.В.</p>
+            <p>© boughtanrazum, 2025-2026</p>
         </footer>
     </div>
 </body>
