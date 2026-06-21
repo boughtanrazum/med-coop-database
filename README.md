@@ -39,3 +39,10 @@ Open http://localhost/med_coop/ in browser.
 Поместите файлы в директорию веб-сервера (для XAMPP — htdocs).
 Откройте http://localhost/med_coop/ в браузере.
 
+<img width="1308" height="648" alt="image" src="https://github.com/user-attachments/assets/b235edff-257c-4db4-98c6-bb9e52d68efd" />
+<img width="1247" height="731" alt="image" src="https://github.com/user-attachments/assets/fb5c3bfe-3019-4c1f-953e-fc3f524decae" />
+<img width="1190" height="648" alt="image" src="https://github.com/user-attachments/assets/7c9a2b2e-7085-4af6-93b9-6a8fe0e45da4" />
+
+
+
+
